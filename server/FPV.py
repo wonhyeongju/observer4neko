@@ -55,7 +55,7 @@ class FPV:
         global WatchDogMode
         WatchDogMode = invar
 
-    async def on_connect(socket, path, loop):
+    async def on_connect(self, socket, path):
         print("Socket connected...")
         client_socket = socket
 
