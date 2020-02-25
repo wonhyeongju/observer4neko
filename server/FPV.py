@@ -201,7 +201,7 @@ class FPV:
         rawCapture = PiRGBArray(camera, size=(640, 480))
 
         asyncio.set_event_loop(event_loop)
-        event_loop.run_until_complete(websockets.serve(self.on_connect, IPinver, 5555))
+        event_loop.run_until_complete(websockets.serve(self.on_connect, "0.0.0.0", 5555))
 
 
 if __name__ == '__main__':

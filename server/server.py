@@ -365,7 +365,7 @@ if __name__ == '__main__':
 
             # create loop for ws
             loop = asyncio.new_event_loop()
-            fps_threading=threading.Thread(target=FPV_thread, args=(loop))         #Define a thread for FPV and OpenCV
+            fps_threading=threading.Thread(target=FPV_thread, args=(loop,))         #Define a thread for FPV and OpenCV
             fps_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
             fps_threading.start()                                     #Thread starts
 
