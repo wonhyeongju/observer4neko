@@ -18,6 +18,7 @@ import FPV
 import psutil
 import switch
 import LED
+import asyncio
 
 '''
 Initiation number of steps, don't have to change it.
@@ -164,11 +165,10 @@ def info_send_client():
             pass
 
 
-def FPV_thread():
+def FPV_thread(event_loop):
     global fpv
     fpv=FPV.FPV()
-    fpv.capture_thread(addr[0])
-
+    fpv.capture_thread(addr[0], event_loop)
 
 def run():
     global direction_command, turn_command, SmoothMode, steadyMode
@@ -363,7 +363,9 @@ if __name__ == '__main__':
             print('...connected from :', addr)
             move.robot_stand(150)
 
-            fps_threading=threading.Thread(target=FPV_thread)         #Define a thread for FPV and OpenCV
+            # create loop for ws
+            loop = asyncio.new_event_loop()
+            fps_threading=threading.Thread(target=FPV_thread, args=(loop))         #Define a thread for FPV and OpenCV
             fps_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
             fps_threading.start()                                     #Thread starts
 
