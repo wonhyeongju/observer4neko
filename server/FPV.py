@@ -55,9 +55,22 @@ class FPV:
         global WatchDogMode
         WatchDogMode = invar
 
-    async def on_connect(socket, path):
+    async def on_connect(socket, path, loop):
         print("Socket connected...")
         client_socket = socket
+
+        ap = argparse.ArgumentParser()            #OpenCV initialization
+        ap.add_argument("-b", "--buffer", type=int, default=64,
+            help="max buffer size")
+        args = vars(ap.parse_args())
+        pts = deque(maxlen=args["buffer"])
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+
+        camera = picamera.PiCamera() 
+        camera.resolution = (640, 480)
+        camera.framerate = 20
+        rawCapture = PiRGBArray(camera, size=(640, 480))
 
         avg = None
         motionCounter = 0
@@ -187,22 +200,9 @@ class FPV:
             rawCapture.truncate(0)
 
     def capture_thread(self,IPinver,event_loop):
-        ap = argparse.ArgumentParser()            #OpenCV initialization
-        ap.add_argument("-b", "--buffer", type=int, default=64,
-            help="max buffer size")
-        args = vars(ap.parse_args())
-        pts = deque(maxlen=args["buffer"])
-
-        font = cv2.FONT_HERSHEY_SIMPLEX
-
-        camera = picamera.PiCamera() 
-        camera.resolution = (640, 480)
-        camera.framerate = 20
-        rawCapture = PiRGBArray(camera, size=(640, 480))
-
         asyncio.set_event_loop(event_loop)
         event_loop.run_until_complete(websockets.serve(self.on_connect, "0.0.0.0", 5555))
-
+        asyncio.get_event_loop().run_forever()
 
 if __name__ == '__main__':
     fpv=FPV()
