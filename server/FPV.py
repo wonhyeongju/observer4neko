@@ -199,9 +199,11 @@ class FPV:
                     await client_socket.send(jpg_as_text)
 
                 rawCapture.truncate(0)
-            finally:
-                camera.close()
-                client_socket = None
+        except:
+            print("disconnected camera ws")         
+        finally:
+            camera.close()
+            client_socket = None
 
     def capture_thread(self,IPinver,event_loop):
         asyncio.set_event_loop(event_loop)
