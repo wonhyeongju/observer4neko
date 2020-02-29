@@ -23,6 +23,7 @@ from rpi_ws281x import *
 import move
 import websockets
 import asyncio
+import signal
 
 Y_lock = 0
 X_lock = 0
@@ -204,6 +205,7 @@ class FPV:
         finally:
             camera.close()
             client_socket = None
+            os.kill(os.getpid(), signal.SIGUSR1)
 
     def capture_thread(self,IPinver,event_loop):
         asyncio.set_event_loop(event_loop)

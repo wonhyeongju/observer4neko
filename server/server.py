@@ -371,6 +371,7 @@ if __name__ == '__main__':
 
             break
         except:
+            print("connection exception")
             LED.colorWipe(Color(0,0,0))
             pass
 
